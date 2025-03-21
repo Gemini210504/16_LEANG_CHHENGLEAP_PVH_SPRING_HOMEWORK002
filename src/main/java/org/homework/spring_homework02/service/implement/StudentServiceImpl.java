@@ -25,7 +25,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student updateStudentById(Integer id, StudentRequest studentRequest) {
-        return studentRepository.updateStudentById( id,studentRequest);
+        return studentRepository.updateStudentById(studentRequest,id);
     }
 
     @Override

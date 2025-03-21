@@ -2,7 +2,9 @@ package org.homework.spring_homework02.repository;
 
 
 import org.apache.ibatis.annotations.*;
+import org.homework.spring_homework02.model.entity.Course;
 import org.homework.spring_homework02.model.entity.Student;
+import org.homework.spring_homework02.model.request.CourseRequest;
 import org.homework.spring_homework02.model.request.StudentRequest;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public interface StudentRepository {
             @Result(property = "studentName", column = "student_name"),
             @Result(property = "email", column = "email"),
             @Result(property = "phoneNumber", column = "phone_number"),
+            @Result(property = "courses" , column = "student_id",
+                    one = @One(select = "org.homework.spring_homework02.repository.CourseRepository.getCourseByStudentCourse"))
     })
     List<Student> retrieveAllStudents(@Param("size") Integer size, @Param("page") Integer page);
 
@@ -41,16 +45,18 @@ public interface StudentRepository {
             UPDATE students
             SET student_name = #{request.studentName},
                 email = #{request.email},
-                phone_number = #{request.phoneNumber}
+                phone_number = #{request.phoneNumber},
+                student_id = #{request.courseId}
             WHERE student_id = #{id}
             RETURNING *;
             """)
     @ResultMap("studentMapResults")
-    Student updateStudentById(@Param("request") Integer id,StudentRequest studentRequest );
+    Student updateStudentById(@Param("request") StudentRequest studentRequest ,Integer id );
 
     @Select("""
             DELETE FROM students WHERE student_id = #{id}
             RETURNING *;
             """)
+    @ResultMap("studentMapResults")
     Student deleteStudentById(Integer id);
 }

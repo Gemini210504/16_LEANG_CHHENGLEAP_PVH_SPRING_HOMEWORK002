@@ -35,7 +35,7 @@ public interface InstructorRepository {
 
     @Delete("""
             DELETE FROM instructors WHERE instructor_id = #{id}
-            RETURNING instructor_id, instructor_name, email;
+            RETURNING *;
             """)
     @ResultMap("mapResultInstructor")
     Instructor deleteInstructorById(@Param("id") Integer id);

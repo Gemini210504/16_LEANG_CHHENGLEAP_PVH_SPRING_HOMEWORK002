@@ -33,7 +33,7 @@ public interface CourseRepository {
     @Select("""
             INSERT INTO courses (course_name, description, instructor_id)
             VALUES (#{request.courseName}, #{request.description}, #{request.instructorId})
-            RETURNING *
+            RETURNING course_id, course_name, description
             """)
     @ResultMap("courseMapper")
     Course insertCourse(@Param("request") CourseRequest  courseRequest);
@@ -57,6 +57,18 @@ public interface CourseRepository {
     """)
     @ResultMap("courseMapper")
     Course deleteById(Integer id);
+
+
+    @Select("""
+           Select c.course_id, c.course_name, c.description , c.instructor_id FROM courses c INNER JOIN public.student_course sc on c.course_id = sc.course_id
+           WHERE sc.student_id =#{id}
+    """)
+    @ResultMap("courseMapper")
+    Course getCourseByStudentCourse(Integer id);
+
+
+
+
 
 }
 
